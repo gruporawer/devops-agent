@@ -3,8 +3,8 @@ name: Build Images
 on:
   push:
     branches:
-    - master
-    - test-* # make it be easier for contributors to test
+      - master
+      - test-* # make it be easier for contributors to test
     tags:
       - 'v*.*.*'
   pull_request:
@@ -12,17 +12,31 @@ on:
       - 'master'
 
 jobs:
+  BuildBase:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build base agent
+        uses: ./.github/actions/build
+        with:
+          context: base
+          dockerfile: base/Dockerfile
+          image-name: builder-base
+          platforms: linux/amd64,linux/arm64
+          docker-namespace: ${{ secrets.DOCKER_HUB_USER }}
+          docker-password: ${{ secrets.DOCKER_HUB_SECRETS }}
+          ghcr-token: ${{ secrets.GHCR_TOKEN }}
   BuildNodeJs:
     needs: BuildBase
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
-    - name: Build NodeJS agent
-      uses: ./.github/actions/build
-      with:
-        context: nodejs
-        dockerfile: nodejs/Dockerfile
-        image-name: builder-nodejs
-        platforms: linux/amd64,linux/arm64
-        docker-namespace: ${{ secrets.DOCKER_HUB_USER }}
-        docker-password: ${{ secrets.DOCKER_HUB_SECRETS }}
+      - uses: actions/checkout@v2
+      - name: Build NodeJS agent
+        uses: ./.github/actions/build
+        with:
+          context: nodejs
+          dockerfile: nodejs/Dockerfile
+          image-name: builder-nodejs
+          platforms: linux/amd64,linux/arm64
+          docker-namespace: ${{ secrets.DOCKER_HUB_USER }}
+          docker-password: ${{ secrets.DOCKER_HUB_SECRETS }}
