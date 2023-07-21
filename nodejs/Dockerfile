@@ -1,7 +1,5 @@
 FROM gruporawer/builder-base:v1.0.0
 
-ENV NODE_VERSION 18.3.0
-
 RUN ARCH= && uArch="$(uname -m)" \
   && case "${uArch##*-}" in \
     x86_64) ARCH='x64';; \
@@ -23,21 +21,13 @@ RUN ARCH= && uArch="$(uname -m)" \
   ; do \
     gpg --batch --keyserver sks.srv.dumain.com --recv-keys "$key"; \
   done \
-  && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
-  && curl -fsSLO https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt \
-  && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-  && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-  && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt \
-  && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+  && curl -sL "https://rpm.nodesource.com/setup_18.x" | sudo bash - \
   && yum install -y nodejs gcc-c++ make bzip2 GConf2 gtk2 chromedriver chromium xorg-x11-server-Xvfb
 
 RUN npm -g config set user root
 RUN npm i -g watch-cli vsce typescript
 
 # Yarn
-ENV YARN_VERSION 1.16.0
 RUN curl -f -L -o /tmp/yarn.tgz https://github.com/yarnpkg/yarn/releases/download/v${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz && \
-	tar xf /tmp/yarn.tgz && \
-	mv yarn-v${YARN_VERSION} /opt/yarn && \
-	ln -s /opt/yarn/bin/yarn /usr/local/bin/yarn && \
-	yarn config set cache-folder /root/.yarn
+    sudo yum -y install yarn \
+    yarn config set cache-folder /root/.yarn
