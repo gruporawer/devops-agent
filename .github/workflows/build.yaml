@@ -25,7 +25,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           docker-namespace: ${{ secrets.DOCKER_HUB_USER }}
           docker-password: ${{ secrets.DOCKER_HUB_SECRETS }}
-          ghcr-token: ${{ secrets.GHCR_TOKEN }}
+          ghcr-token: ${{ secrets.GITHUB_TOKEN }}
   BuildNodeJs:
     needs: BuildBase
     runs-on: ubuntu-20.04
@@ -40,4 +40,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           docker-namespace: ${{ secrets.DOCKER_HUB_USER }}
           docker-password: ${{ secrets.DOCKER_HUB_SECRETS }}
-          ghcr-token: ${{ secrets.GHCR_TOKEN }}
+          ghcr-token: ${{ secrets.GITHUB_TOKEN }}
