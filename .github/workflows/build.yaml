@@ -14,9 +14,6 @@ on:
 jobs:
   BuildBase:
     runs-on: ubuntu-20.04
-    permissions:
-      packages: write
-      contents: read
     steps:
       - uses: actions/checkout@v2
       - name: Build base agent
@@ -32,9 +29,6 @@ jobs:
   BuildNodeJs:
     needs: BuildBase
     runs-on: ubuntu-20.04
-    permissions:
-      packages: write
-      contents: read
     steps:
       - uses: actions/checkout@v2
       - name: Build NodeJS agent
