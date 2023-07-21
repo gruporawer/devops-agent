@@ -1,6 +1,6 @@
-FROM kubespheredev/builder-base:v3.1.0
+FROM gruporawer/builder-base:v3.1.0
 
-ENV NODE_VERSION 10.16.3
+ENV NODE_VERSION 18.3.0
 
 RUN ARCH= && uArch="$(uname -m)" \
   && case "${uArch##*-}" in \
