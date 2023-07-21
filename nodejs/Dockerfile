@@ -21,7 +21,7 @@ RUN ARCH= && uArch="$(uname -m)" \
   ; do \
     gpg --batch --keyserver sks.srv.dumain.com --recv-keys "$key"; \
   done \
-  && curl -sL "https://rpm.nodesource.com/setup_18.x" | sudo bash - \
+  && curl -sL "https://rpm.nodesource.com/setup_18.x" | bash - \
   && yum install -y nodejs gcc-c++ make bzip2 GConf2 gtk2 chromedriver chromium xorg-x11-server-Xvfb
 
 RUN npm -g config set user root
