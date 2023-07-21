@@ -35,6 +35,10 @@ inputs:
     description: Password of current docker namespace in docker registry.
     required: false
     default: ""
+  ghcr-token:
+    description: Token of current GitHub account in GitHub container registry.
+    required: false
+    default: ""
 
 runs:
   using: composite
