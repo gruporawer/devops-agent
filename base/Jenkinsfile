@@ -10,7 +10,7 @@ pipeline {
       steps {
         container('base') {
           sh '''docker build -t gruporawer/builder-base .
-docker tag gruporawer/builder-base gruporawer/builder-base:2.1.0'''
+docker tag gruporawer/builder-base gruporawer/builder-base:1.0.0'''
         }
 
       }

@@ -10,7 +10,7 @@ pipeline {
       steps {
         container('base') {
           sh '''docker build -t gruporawer/builder-nodejs .
-docker tag gruporawer/builder-nodejs gruporawer/builder-nodejs:2.1.0'''
+docker tag gruporawer/builder-nodejs gruporawer/builder-nodejs:1.0.0'''
         }
 
       }
