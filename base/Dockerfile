@@ -5,7 +5,7 @@ FROM centos:8
 RUN cd /etc/yum.repos.d/
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
 RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-
+RUN yum update
 RUN yum install -y epel-release ca-certificates && \
   yum install -y unzip \
   which \
@@ -22,7 +22,7 @@ RUN yum install -y epel-release ca-certificates && \
   openssl-devel \
   perl-devel \
   zlib-devel \
-  python-pip \
+  python3-pip \
   java-1.8.0-openjdk && \
   yum -y clean all --enablerepo='*'
 
