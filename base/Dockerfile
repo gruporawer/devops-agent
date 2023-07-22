@@ -47,6 +47,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     openjdk-8-jdk \
     autoconf \
     bison \
+    perl \
     libssl-dev \
     libyaml-dev \
     libreadline6-dev \
@@ -56,6 +57,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     libgmp-dev \
     libgdbm-dev \
     libdb-dev \
+    gettext \
     # snapcraft \
     squashfs-tools \
     --no-install-recommends
