@@ -1,30 +1,53 @@
-FROM centos:8
+FROM ubuntu:23.10
 
 # utils
+RUN apt-get update && \
+  apt-get install -y software-properties-common && \
+  add-apt-repository ppa:git-core/ppa
 
-RUN cd /etc/yum.repos.d/
-RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-RUN yum update -y
-RUN yum install -y epel-release ca-certificates && \
-  yum install -y unzip \
-  which \
-  make \
-  wget \
-  zip \
-  bzip2 \
-  gcc \
-  gcc-c++ \
-  curl-devel \
-  autoconf \
-  expat-devel \
-  gettext-devel \
-  openssl-devel \
-  perl-devel \
-  zlib-devel \
-  python3-pip \
-  java-1.8.0-openjdk && \
-  yum -y clean all --enablerepo='*'
+# Install base dependencies
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+    sudo \
+    build-essential \
+    ca-certificates \
+    curl \
+    git \
+    fakeroot \
+    clang \
+    cmake \
+    libsecret-1-dev \
+    libnss3 \
+    libgtk2.0-dev \
+    libgtk-3-dev \
+    libnotify-dev \
+    libdbus-1-dev \
+    libxrandr-dev \
+    libxext-dev \
+    libxss-dev \
+    libgconf2-dev \
+    libasound2-dev \
+    libcap-dev \
+    libcups2-dev \
+    libxtst-dev \
+    libcurl4-openssl-dev \
+    libxkbfile-dev \
+    curl \
+    wget \
+    xvfb \
+    snapd \
+    make \
+    zip \
+    unzip \
+    bzip2 \
+    openssl \
+    zlib1g \
+    zlib1g-dev \
+    python3 \
+    python3-pip \
+    openjdk-8-jdk \
+    # snapcraft \
+    squashfs-tools \
+    --no-install-recommends
 
 RUN wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz && \
     tar zxvf git-2.9.5.tar.gz --no-same-owner && \
@@ -37,8 +60,6 @@ RUN wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz &
     cd ..&& \
     rm -rf git-2.9.5.tar.gz git-2.9.5 && \
     git version
-
-
 
 # Set the locale(en_US.UTF-8)
 ENV LANG en_US.UTF-8
