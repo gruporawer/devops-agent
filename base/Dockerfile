@@ -1,8 +1,8 @@
-FROM centos:7
+FROM ubuntu:22.04
 
 # utils
-RUN yum install -y epel-release ca-certificates && \
-  yum install -y unzip \
+RUN apt install -y epel-release ca-certificates && \
+  apt install -y unzip \
   which \
   make \
   wget \
@@ -18,8 +18,7 @@ RUN yum install -y epel-release ca-certificates && \
   perl-devel \
   zlib-devel \
   python-pip \
-  java-1.8.0-openjdk && \
-  yum -y clean all --enablerepo='*'
+  java-1.8.0-openjdk
 
 RUN wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz && \
     tar zxvf git-2.9.5.tar.gz --no-same-owner && \
