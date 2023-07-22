@@ -45,6 +45,17 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     python3 \
     python3-pip \
     openjdk-8-jdk \
+    autoconf \
+    bison \
+    libssl-dev \
+    libyaml-dev \
+    libreadline6-dev \
+    zlib1g-dev \
+    libncurses5-dev \
+    libffi-dev \
+    libgdbm6-dev \
+    libgdbm-dev \
+    libdb-dev \
     # snapcraft \
     squashfs-tools \
     --no-install-recommends
