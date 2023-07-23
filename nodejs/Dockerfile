@@ -1,4 +1,4 @@
-FROM gruporawer/nbase2
+FROM gruporawer/builder-base:v1.0.0
 
 ENV NODE_VERSION 18.17.0
 
