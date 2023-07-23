@@ -4,9 +4,8 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 
 # utils
 RUN apt-get update && \
-  apt-get install -y software-properties-common && \
-  add-apt-repository ppa:git-core/ppa \
-  && echo 'deb http://deb.debian.org/debian bullseye main' >> /etc/apt/sources.list \
+  apt-get install -y software-properties-common \
+  && echo 'deb http://deb.debian.org/debian bullseye main' >> /etc/apt/sources.list
 
 # Install base dependencies
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
