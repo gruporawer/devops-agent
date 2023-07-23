@@ -1,12 +1,13 @@
 FROM gruporawer/builder-base:v1.0.0
 
-ENV NODE_VERSION 18.16.0
+ENV NODE_VERSION 17.0.0
 
-RUN export PLATFORM=$(if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then echo "x64"; else echo "arm64"; fi) \
-  buildDeps='xz-utils curl ca-certificates gnupg2 dirmngr' \
-  && set -x \
-  && apt-get update && apt-get upgrade -y && apt-get install -y $buildDeps --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/* \
+RUN ARCH= && uArch="$(uname -m)" \
+  && case "${uArch##*-}" in \
+    x86_64) ARCH='x64';; \
+    aarch64) ARCH='arm64';; \
+    *) echo "unsupported architecture"; exit 1 ;; \
+  esac \
   # gpg keys listed at https://github.com/nodejs/node#release-keys
   && set -ex \
   && for key in \
@@ -20,24 +21,21 @@ RUN export PLATFORM=$(if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then echo "x64"
     C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
     108F52B48DB57BB0CC439B2997B01419BD92F80A \
   ; do \
-  gpg --batch --keyserver sks.srv.dumain.com --recv-keys "$key"; \
-    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
-    gpg --batch --keyserver keyserver.ubuntu.com  --recv-keys "$key" ; \
+    gpg --batch --keyserver sks.srv.dumain.com --recv-keys "$key"; \
   done \
-  && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$PLATFORM.tar.xz" \
-  && curl -SLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
-  && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-  && grep " node-v$NODE_VERSION-linux-$PLATFORM.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-  && tar -xJf "node-v$NODE_VERSION-linux-$PLATFORM.tar.xz" -C /usr/local --strip-components=1 \
-  && rm "node-v$NODE_VERSION-linux-$PLATFORM.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-  && apt-get purge -y --auto-remove $buildDeps \
-  && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+  && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
+  && curl -fsSLO https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt \
+  && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+  && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+  && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt \
+  && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+  && yum install -y nodejs gcc-c++ make bzip2 GConf2 gtk2 chromedriver chromium xorg-x11-server-Xvfb
 
 RUN npm -g config set user root
 RUN npm i -g watch-cli vsce typescript
 
 # Yarn
-ENV YARN_VERSION 1.22.19
+ENV YARN_VERSION 1.16.0
 RUN curl -f -L -o /tmp/yarn.tgz https://github.com/yarnpkg/yarn/releases/download/v${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz && \
 	tar xf /tmp/yarn.tgz && \
 	mv yarn-v${YARN_VERSION} /opt/yarn && \
