@@ -1,6 +1,6 @@
 FROM gruporawer/builder-base:v1.0.0
 
-ENV NODE_VERSION 17.0.0
+ENV NODE_VERSION 10.16.3
 
 RUN ARCH= && uArch="$(uname -m)" \
   && case "${uArch##*-}" in \
@@ -8,6 +8,9 @@ RUN ARCH= && uArch="$(uname -m)" \
     aarch64) ARCH='arm64';; \
     *) echo "unsupported architecture"; exit 1 ;; \
   esac \
+  && set -x \
+  && apt-get update && apt-get upgrade -y && apt-get install -y $buildDeps --no-install-recommends \
+  && rm -rf /var/lib/apt/lists/* \
   # gpg keys listed at https://github.com/nodejs/node#release-keys
   && set -ex \
   && for key in \
@@ -29,7 +32,7 @@ RUN ARCH= && uArch="$(uname -m)" \
   && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
-  && yum install -y nodejs gcc-c++ make bzip2 GConf2 gtk2 chromedriver chromium xorg-x11-server-Xvfb
+  && apt-get purge -y --auto-remove $buildDeps
 
 RUN npm -g config set user root
 RUN npm i -g watch-cli vsce typescript
