@@ -1,66 +1,35 @@
-FROM ubuntu:23.10
+FROM debian:bullseye-slim
+
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
 # utils
 RUN apt-get update && \
   apt-get install -y software-properties-common && \
-  add-apt-repository ppa:git-core/ppa
+  add-apt-repository ppa:git-core/ppa \
+  && echo 'deb http://deb.debian.org/debian bullseye main' >> /etc/apt/sources.list \
 
 # Install base dependencies
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
-    sudo \
-    build-essential \
-    ca-certificates \
-    curl \
-    git \
-    fakeroot \
-    clang \
-    cmake \
-    libsecret-1-dev \
-    libnss3 \
-    libgtk2.0-dev \
-    libgtk-3-dev \
-    libnotify-dev \
-    libdbus-1-dev \
-    libxrandr-dev \
-    libxext-dev \
-    libxss-dev \
-    libgconf2-dev \
-    libasound2-dev \
-    libcap-dev \
-    libcups2-dev \
-    libxtst-dev \
-    libcurl4-openssl-dev \
-    libxkbfile-dev \
-    curl \
-    wget \
-    xvfb \
-    snapd \
-    make \
-    zip \
-    unzip \
-    bzip2 \
-    openssl \
-    zlib1g \
-    zlib1g-dev \
-    python3 \
-    python3-pip \
-    openjdk-8-jdk \
-    autoconf \
-    bison \
-    perl \
-    libssl-dev \
-    libyaml-dev \
-    libreadline6-dev \
-    zlib1g-dev \
-    libncurses5-dev \
-    libffi-dev \
-    libgmp-dev \
-    libgdbm-dev \
-    libdb-dev \
-    gettext \
-    # snapcraft \
-    squashfs-tools \
-    --no-install-recommends
+  sudo \
+  unzip \
+  ca-certificates \
+  make \
+  wget \
+  zip \
+  bzip2 \
+  build-essential \
+  curl \
+  autoconf \
+  bison \
+  perl \
+  gettext \
+  openssl \
+  zlib1g \
+  zlib1g-dev \
+  python3-pip \
+  # snapcraft \
+  squashfs-tools \
+  --no-install-recommends
 
 RUN wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz && \
     tar zxvf git-2.9.5.tar.gz --no-same-owner && \
@@ -96,3 +65,4 @@ COPY ./ ./
 RUN ./hack/install_utils.sh && rm -rf ./*
 
 CMD ["docker","version"]
+
